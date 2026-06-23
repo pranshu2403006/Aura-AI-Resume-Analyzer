@@ -1,0 +1,203 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Background Image Container -->
+<div class="absolute inset-0 z-0 pointer-events-none overflow-hidden h-full">
+    <!-- Dark overlay to ensure text readability -->
+    <div class="absolute inset-0 bg-[#09090b]/60 z-10"></div>
+    <img src="{% static 'core/bg.png' %}" class="absolute inset-0 w-full h-full object-cover object-center mix-blend-overlay opacity-60" alt="Recruitment AI Background">
+</div>
+
+<div class="max-w-4xl mx-auto mt-12 relative z-10">
+    <div class="glass-panel rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10">
+        
+        <!-- Header -->
+        <div class="bg-indigo-600/20 border-b border-indigo-500/20 px-8 py-6 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-600/10 backdrop-blur-sm"></div>
+            <div class="relative z-10 flex items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-white tracking-tight">AI Resume Analysis</h2>
+                    <p class="text-indigo-200 mt-2 font-medium">Upload your resume to instantly match against top industry roles.</p>
+                </div>
+                <div class="hidden sm:block p-3 bg-white/5 rounded-full border border-white/10 shadow-inner">
+                    <svg class="w-10 h-10 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Content -->
+        <form method="post" enctype="multipart/form-data" class="p-8 sm:p-10" id="uploadForm">
+            {% csrf_token %}
+            
+            <div class="space-y-8">
+                <!-- Job Selection -->
+                <div class="group">
+                    <label for="{{ form.job.id_for_label }}" class="block text-sm font-semibold text-gray-300 mb-2 group-focus-within:text-indigo-400 transition-colors">Target Job Role <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        {{ form.job }}
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 ml-1">Select the job description you want the AI to measure against.</p>
+                </div>
+                
+                <hr class="border-gray-800/60">
+                
+                <!-- Candidate Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="group">
+                        <label for="{{ form.candidate_name.id_for_label }}" class="block text-sm font-semibold text-gray-300 mb-2 group-focus-within:text-indigo-400 transition-colors">Full Name</label>
+                        {{ form.candidate_name }}
+                    </div>
+                    <div class="group">
+                        <label for="{{ form.candidate_email.id_for_label }}" class="block text-sm font-semibold text-gray-300 mb-2 group-focus-within:text-indigo-400 transition-colors">Email Address</label>
+                        {{ form.candidate_email }}
+                    </div>
+                </div>
+                
+                <!-- File Upload Box -->
+                <div>
+                    <label for="{{ form.pdf_file.id_for_label }}" class="block text-sm font-semibold text-gray-300 mb-2">Upload Resume (PDF)</label>
+                    <div class="relative mt-2 flex justify-center px-6 pt-10 pb-12 border-2 border-gray-700 border-dashed rounded-xl hover:border-indigo-500 hover:bg-white/5 transition-all duration-300 bg-[#13131a] group overflow-hidden">
+                        
+                        <!-- Decorative glow inside upload box -->
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-indigo-900/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="space-y-3 text-center relative z-10 flex flex-col items-center w-full">
+                            <div class="p-4 bg-gray-800/50 rounded-full border border-gray-700 shadow-sm group-hover:scale-110 transition-transform duration-300 group-hover:bg-indigo-900/40 group-hover:border-indigo-500/50">
+                                <svg class="h-8 w-8 text-indigo-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <div class="flex flex-col sm:flex-row text-sm text-gray-400 items-center justify-center gap-2 mt-4 w-full cursor-pointer">
+                                {{ form.pdf_file }}
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 font-medium tracking-wide">Secure PDF upload up to 10MB</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="mt-10 pt-6 border-t border-gray-800/60 flex justify-end">
+                <button type="submit" id="analyzeBtn" class="relative group overflow-hidden bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 px-10 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.6)] transition-all duration-300 flex items-center gap-3">
+                    <span class="relative z-10 flex items-center gap-2">
+                        Initialize AI Scan
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                    <!-- Button Glow Effect -->
+                    <div class="absolute inset-0 h-full w-full opacity-0 group-hover:opacity-20 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.8)_50%,transparent_75%)] bg-[length:250%_250%,100%_100%] animate-[shimmer_2s_infinite]"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= SCANNING OVERLAY ================= -->
+<div id="scannerOverlay" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center bg-[#09090b]/90 backdrop-blur-md opacity-0 transition-opacity duration-500">
+    <!-- Scanner Graphic -->
+    <div class="relative w-64 h-80 border-2 border-indigo-500/30 rounded-lg overflow-hidden bg-white/5 shadow-[0_0_50px_rgba(99,102,241,0.2)]">
+        <!-- Document placeholder lines -->
+        <div class="absolute inset-x-8 top-10 space-y-4">
+            <div class="h-4 bg-gray-700/50 rounded w-3/4"></div>
+            <div class="h-3 bg-gray-700/30 rounded w-full"></div>
+            <div class="h-3 bg-gray-700/30 rounded w-5/6"></div>
+            <div class="h-3 bg-gray-700/30 rounded w-FULL mt-8"></div>
+            <div class="h-3 bg-gray-700/30 rounded w-4/5"></div>
+            <div class="h-3 bg-gray-700/30 rounded w-full"></div>
+        </div>
+        
+        <!-- The Laser Line -->
+        <div class="absolute top-0 left-0 w-full h-[2px] bg-indigo-400 shadow-[0_0_15px_3px_#818cf8] animate-[scan_2s_ease-in-out_infinite]"></div>
+        <!-- Laser Gradient Fade -->
+        <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-t from-transparent to-indigo-500/20 animate-[scan_2s_ease-in-out_infinite]"></div>
+    </div>
+    
+    <!-- Status Text -->
+    <div class="mt-8 text-center space-y-2">
+        <h3 class="text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 animate-pulse">PROCESSING DATA</h3>
+        <p id="scanStatusText" class="text-gray-400 font-mono text-sm h-6">Extracting PDF layout...</p>
+    </div>
+</div>
+
+<!-- Tailwind Form Styles injected dynamically for Dark Mode -->
+<style>
+    .form-control {
+        @apply w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-black placeholder-gray-400 shadow-inner transition-colors;
+    }
+    .form-select {
+        @apply w-full px-4 py-3 bg-[#1a1a24] border border-gray-700/60 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-gray-200 shadow-inner transition-colors appearance-none cursor-pointer;
+    }
+    .form-select option {
+        @apply bg-[#1a1a24] text-gray-200;
+    }
+    
+    /* Custom Scrollbar for dropdowns */
+    select {
+        color-scheme: dark;
+    }
+
+    input[type=file]::file-selector-button {
+        @apply px-4 py-2 mr-4 border border-gray-600 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors cursor-pointer font-medium text-sm;
+    }
+
+    @keyframes scan {
+        0%, 100% { top: 0%; }
+        50% { top: 100%; }
+    }
+    @keyframes shimmer {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(100%); }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('uploadForm');
+        const overlay = document.getElementById('scannerOverlay');
+        const statusText = document.getElementById('scanStatusText');
+        
+        const statuses = [
+            "Extracting raw PDF text...",
+            "Running NLP Spacy pipelines...",
+            "Tokenizing entities & capabilities...",
+            "Computing TF-IDF matrices...",
+            "Calculating Cosine Similarity...",
+            "Cross-referencing database models...",
+            "Generating actionable feedback..."
+        ];
+
+        form.addEventListener('submit', (e) => {
+            // Require a file
+            const fileInput = form.querySelector('input[type="file"]');
+            if (fileInput && fileInput.files.length === 0) {
+                alert("Please attach a PDF resume to analyze.");
+                e.preventDefault();
+                return;
+            }
+
+            // Show Overlay
+            overlay.classList.remove('hidden');
+            // Small timeout to allow display:flex to apply before animating opacity
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+            }, 50);
+            
+            // Cycle through statuses for realism
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < statuses.length) {
+                    statusText.textContent = statuses[i];
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 600);
+        });
+    });
+</script>
+{% endblock %}
